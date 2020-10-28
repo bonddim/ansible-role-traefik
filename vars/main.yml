@@ -1,0 +1,5 @@
+---
+# vars file for traefik role
+traefik_configfile_static: "{{ traefik_data }}/static.yaml"
+traefik_configfile_dynamic: "{{ traefik_data }}/dynamic.yaml"
+traefik_acme_storage_file: "{{ traefik_data }}/acme.json"

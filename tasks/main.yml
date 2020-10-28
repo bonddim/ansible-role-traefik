@@ -1,0 +1,65 @@
+---
+# tasks file for traefik role
+- name: Ensure docker network state
+  docker_network:
+    name: "{{ traefik_network }}"
+    state: present
+  tags: traefik, traefik-network
+
+- name: Ensure traefik data directory state
+  become: true
+  file:
+    path: "{{ traefik_data }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '750'
+  tags: traefik, traefik-dir
+
+- name: Ensure acme storage state
+  become: true
+  file:
+    path: "{{ traefik_acme_storage_file }}"
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+    owner: root
+    group: root
+    mode: '600'
+  tags: traefik, traefik-acme
+
+- name: Generate traefik config files
+  become: true
+  template:
+    dest: "{{ item.dest }}"
+    src: "{{ item.src }}"
+    owner: root
+    group: root
+    mode: '640'
+  loop:
+    - { src: static.yaml.j2, dest: "{{ traefik_configfile_static }}" }
+    - { src: dynamic.yaml.j2, dest: "{{ traefik_configfile_dynamic }}" }
+  register: traefik_config
+  tags: traefik, traefik-config
+
+- name: Launch traefik container
+  docker_container:
+    name: traefik
+    image: traefik:latest
+    pull: true
+    state: started
+    restart: "{{ traefik_config.results.0.changed | default(false) }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ traefik_network }}"
+    networks_cli_compatible: true
+    published_ports:
+      - "80:80"
+      - "443:443"
+    command:
+      - --configfile "{{ traefik_configfile_static }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "{{ traefik_data }}:{{ traefik_data }}"
+  tags: traefik, traefik-container

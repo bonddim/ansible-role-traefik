@@ -1,0 +1,4 @@
+---
+# defaults file for traefik role
+traefik_network: traefik
+traefik_data: /opt/traefik
