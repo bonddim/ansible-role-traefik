@@ -1,13 +1,16 @@
 ---
-### Static configuration
+### {{ ansible_managed }} static configuration
 entryPoints:
   web:
     address: :80
+  {% if traefik_enable_https %}
+    {% if traefik_enable_https_redirect %}
     http:
       redirections:
         entryPoint:
           to: websecure
           scheme: https
+    {% endif %}
   websecure:
     address: :443
     http:
@@ -15,6 +18,7 @@ entryPoints:
         certResolver: letsEncrypt
         domains:
           - main: {{ main_domainname }}
+            sans: [ "*.{{ main_domainname }}" ]
 
 # Enable ACME (Let's Encrypt): automatic SSL
 certificatesResolvers:
@@ -22,18 +26,31 @@ certificatesResolvers:
     acme:
       email: {{ email_address }}
       storage: {{ traefik_acme_storage_file }}
-      {% if traefik_acme_staging | default(false) -%}
+      {% if traefik_acme_staging %}
       caServer: https://acme-staging-v02.api.letsencrypt.org/directory
-      {% endif -%}
+      {% endif %}
+      {# ACME Challenges #}
+      {% if traefik_acme_challenge == 'dns' %}
+      dnsChallenge:
+        provider: {{ traefik_acme_dns_provider }}
+        delayBeforeCheck: 10
+        disablepropagationcheck: {{ traefik_acme_dns_disablepropagationcheck }}
+      {% elif traefik_acme_challenge == 'tls' %}
+      tlsChallenge: {}
+      {% elif traefik_acme_challenge == 'http' %}
       httpChallenge:
         entryPoint: web
+      {% endif %}
+  {% endif %}
 
 # Active config providers
 providers:
+  {% if traefik_provider_docker %}
   # Docker configuration backend
   docker:
-    exposedByDefault: false
-    defaultRule: PathPrefix(`/{{ '{{ normalize .Name }}' }}`)
+    exposedByDefault: {{ traefik_provider_docker_exposebydefault }}
+    defaultRule: {{ traefik_provider_docker_defaultrule }}
+  {% endif %}
 
   # File configuration backend
   file:
@@ -43,9 +60,9 @@ providers:
 # API and dashboard configuration
 api:
   insecure: false
-  dashboard: {{ traefik_dashboard | default(true) }}
+  dashboard: {{ traefik_dashboard }}
 
 # Logs configuration
 log:
-  level: {{ traefik_log_level | default('ERROR') }}
-  format: {{ traefik_log_format | default('json') }}
+  level: {{ traefik_log_level }}
+  format: {{ traefik_log_format }}

@@ -33,6 +33,8 @@
   template:
     dest: "{{ item.dest }}"
     src: "{{ item.src }}"
+    lstrip_blocks: true
+    trim_blocks: true
     owner: root
     group: root
     mode: '640'
@@ -50,16 +52,24 @@
     state: started
     restart: "{{ traefik_config.results.0.changed | default(false) }}"
     restart_policy: unless-stopped
+    container_default_behavior: no_defaults
+    recreate: true
     networks:
       - name: "{{ traefik_network }}"
     networks_cli_compatible: true
+    network_mode: default
     published_ports:
       - "80:80"
       - "443:443"
     command:
       - --configfile "{{ traefik_configfile_static }}"
+    env: "{{ traefik_acme_dns_provider_env }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "{{ traefik_data }}:{{ traefik_data }}"
+    labels:
+      traefik.enable: "{{ traefik_dashboard | string }}"
+      traefik.http.routers.traefik.rule: "Host(`{{ main_domainname }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      traefik.http.routers.traefik.service: api@internal
   tags: traefik, traefik-container

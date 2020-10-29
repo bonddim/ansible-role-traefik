@@ -2,3 +2,33 @@
 # defaults file for traefik role
 traefik_network: traefik
 traefik_data: /opt/traefik
+
+# Config files
+traefik_configfile_static: "{{ traefik_data }}/static.yaml"
+traefik_configfile_dynamic: "{{ traefik_data }}/dynamic.yaml"
+
+# Dashboard
+traefik_dashboard: true
+
+# Logs
+traefik_log_level: DEBUG
+traefik_log_format: json
+
+# HTTPS
+traefik_enable_https: false
+traefik_enable_https_redirect: false
+
+# ACME (Let's Encrypt)
+traefik_acme_storage_file: "{{ traefik_data }}/acme.json"
+traefik_acme_staging: false
+traefik_acme_challenge: dns
+# https://doc.traefik.io/traefik/master/https/acme/#providers
+traefik_acme_dns_provider: ""
+traefik_acme_dns_provider_env:
+  EXAMPLE_VAR: example_value
+traefik_acme_dns_disablepropagationcheck: false
+
+# Providers
+traefik_provider_docker: true
+traefik_provider_docker_exposebydefault: false
+traefik_provider_docker_defaultrule: Host(`{{ '{{ normalize .Name }}' }}.{{ main_domainname }}`)
