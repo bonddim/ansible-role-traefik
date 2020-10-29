@@ -70,7 +70,9 @@
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "{{ traefik_data }}:{{ traefik_data }}"
     labels:
-      traefik.enable: "{{ traefik_dashboard | string }}"
+      traefik.enable: "{{ traefik_dashboard_enable | string }}"
       traefik.http.routers.traefik.rule: "Host(`{{ main_domainname }}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.traefik.entrypoints: "{{ traefik_enable_https | ternary('websecure', 'web') }}"
+      traefik.http.routers.traefik.middlewares: "{{ traefik_dashboard_middlewares }}"
   tags: traefik, traefik-container

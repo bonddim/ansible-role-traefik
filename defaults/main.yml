@@ -8,7 +8,12 @@ traefik_configfile_static: "{{ traefik_data }}/static.yaml"
 traefik_configfile_dynamic: "{{ traefik_data }}/dynamic.yaml"
 
 # Dashboard
-traefik_dashboard: true
+traefik_dashboard_enable: true
+traefik_dashboard_middlewares: basic-auth@file
+
+# Basic auth
+traefik_basic_auth_user: admin
+traefik_basic_auth_pass: $apr1$MR6nE9XC$lC2fnUmGLmsZDGqNlcdxU0  # 'admin' - generated with htpasswd
 
 # Logs
 traefik_log_level: DEBUG

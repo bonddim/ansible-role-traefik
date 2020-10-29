@@ -1,2 +1,10 @@
 ---
 ### {{ ansible_managed }} dynamic configuration
+http:
+  middlewares:
+    basic-auth:
+      basicAuth:
+        removeHeader: true
+        headerField: X-WebAuth-User
+        users:
+          - "{{ traefik_basic_auth_user }}:{{ traefik_basic_auth_pass }}"
