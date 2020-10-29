@@ -53,7 +53,7 @@
     restart: "{{ traefik_config.results.0.changed | default(false) }}"
     restart_policy: unless-stopped
     container_default_behavior: no_defaults
-    recreate: true
+    recreate: false
     networks:
       - name: "{{ traefik_network }}"
     networks_cli_compatible: true
