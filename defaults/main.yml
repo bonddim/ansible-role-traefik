@@ -23,6 +23,7 @@ traefik_log_format: json
 # HTTPS
 traefik_enable_https: false
 traefik_enable_https_redirect: false
+traefik_ssl_config: modern  # https://ssl-config.mozilla.org
 
 # ACME (Let's Encrypt)
 traefik_acme_storage_file: "{{ traefik_data }}/acme.json"

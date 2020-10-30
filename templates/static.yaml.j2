@@ -15,10 +15,13 @@ entryPoints:
     address: :443
     http:
       tls:
+        options: {{ traefik_ssl_config }}@file
         certResolver: letsEncrypt
         domains:
           - main: {{ main_domainname }}
             sans: [ "*.{{ main_domainname }}" ]
+      middlewares:
+        - default@file
 
 # Enable ACME (Let's Encrypt): automatic SSL
 certificatesResolvers:
