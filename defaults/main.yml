@@ -1,7 +1,8 @@
 ---
 # defaults file for traefik role
-traefik_network: traefik
 traefik_data: /opt/traefik
+traefik_network: traefik
+docker_socket_proxy: socket-proxy
 
 # Config files
 traefik_configfile_static: "{{ traefik_data }}/static.yaml"

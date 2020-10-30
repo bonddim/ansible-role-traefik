@@ -1,10 +1,13 @@
 ---
 # tasks file for traefik role
-- name: Ensure docker network state
+- name: Ensure docker networks state
   docker_network:
-    name: "{{ traefik_network }}"
+    name: "{{ item }}"
     state: present
-  tags: traefik, traefik-network
+  loop:
+    - "{{ traefik_network }}"
+    - "{{ docker_socket_proxy }}"
+  tags: traefik, traefik-networks
 
 - name: Ensure traefik data directory state
   become: true
@@ -44,6 +47,30 @@
   register: traefik_config
   tags: traefik, traefik-config
 
+- name: Launch docker-socket-proxy
+  docker_container:
+    name: "{{ docker_socket_proxy }}"
+    image: tecnativa/docker-socket-proxy:latest
+    pull: true
+    ignore_image: false
+    state: started
+    recreate: false
+    restart: false
+    restart_policy: unless-stopped
+    container_default_behavior: no_defaults
+    networks:
+      - name: "{{ docker_socket_proxy }}"
+    networks_cli_compatible: true
+    network_mode: default
+    security_opts:
+      - no-new-privileges:true
+    env:
+      CONTAINERS: '1'
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  tags: traefik, traefik-socket
+
+
 - name: Launch traefik container
   docker_container:
     name: traefik
@@ -57,8 +84,11 @@
     container_default_behavior: no_defaults
     networks:
       - name: "{{ traefik_network }}"
+      - name: "{{ docker_socket_proxy }}"
     networks_cli_compatible: true
     network_mode: default
+    security_opts:
+      - no-new-privileges:true
     published_ports:
       - "80:80"
       - "443:443"
@@ -67,7 +97,6 @@
     env: "{{ traefik_acme_dns_provider_env }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "{{ traefik_data }}:{{ traefik_data }}"
     labels:
       traefik.enable: "{{ traefik_dashboard_enable | string }}"

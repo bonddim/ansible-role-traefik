@@ -48,8 +48,10 @@ providers:
   {% if traefik_provider_docker %}
   # Docker configuration backend
   docker:
-    exposedByDefault: {{ traefik_provider_docker_exposebydefault }}
     defaultRule: {{ traefik_provider_docker_defaultrule }}
+    exposedByDefault: {{ traefik_provider_docker_exposebydefault }}
+    endpoint: tcp://{{ docker_socket_proxy }}:2375
+    network: {{ traefik_network }}
   {% endif %}
 
   # File configuration backend
