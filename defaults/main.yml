@@ -10,7 +10,7 @@ traefik_configfile_dynamic: "{{ traefik_data }}/dynamic.yaml"
 
 # Dashboard
 traefik_dashboard_enable: true
-traefik_dashboard_middlewares: basic-auth@file
+traefik_dashboard_middlewares: auth-basic@file
 
 # Basic auth
 traefik_basic_auth_user: admin

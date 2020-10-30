@@ -2,13 +2,13 @@
 ### {{ ansible_managed }} dynamic configuration
 http:
   middlewares:
-    default:
+    default-security:
       chain:
         middlewares:
           - rate-limit
           - secure-headers
 
-    basic-auth:
+    auth-basic:
       basicAuth:
         removeHeader: true
         headerField: X-WebAuth-User

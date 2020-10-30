@@ -21,7 +21,7 @@ entryPoints:
           - main: {{ main_domainname }}
             sans: [ "*.{{ main_domainname }}" ]
       middlewares:
-        - default@file
+        - default-security@file
 
 # Enable ACME (Let's Encrypt): automatic SSL
 certificatesResolvers:
