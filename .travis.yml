@@ -30,7 +30,7 @@ before_script:
   - mv ../ansible-role-${ROLE_NAME} ../bonddim.${ROLE_NAME}
   - cd ../bonddim.${ROLE_NAME}
   # Install role requirements
-  - ansible-galaxy install -r meta/requirements.yml
+  - ansible-galaxy role install bonddim.docker
 
 script: molecule test
 
