@@ -1,0 +1,34 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Dmytro Bondar
+  license: "license (MIT)"
+
+  role_name: traefik
+  description: "Deploy traefik container with TLS support"
+  github_branch: main
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+
+  galaxy_tags:
+    - traefik
+    - loadbalancer
+    - proxy
+    - reverseproxy
+    - letsencrypt
+    - docker
