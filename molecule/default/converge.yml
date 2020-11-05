@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+
+  pre_tasks:
+    - name: Install docker python library
+      become: true
+      package:
+        name: python3-docker
+        state: present
+
+  roles:
+    - bonddim.traefik
