@@ -57,7 +57,7 @@
     recreate: false
     restart: false
     restart_policy: unless-stopped
-    container_default_behavior: no_defaults
+    container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
     networks:
       - name: "{{ docker_socket_proxy }}"
     networks_cli_compatible: true
@@ -81,7 +81,7 @@
     recreate: false
     restart: "{{ traefik_config.results.0.changed | default(false) }}"
     restart_policy: unless-stopped
-    container_default_behavior: no_defaults
+    container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
     networks:
       - name: "{{ traefik_network }}"
       - name: "{{ docker_socket_proxy }}"
