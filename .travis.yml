@@ -1,0 +1,41 @@
+---
+language: python
+cache: pip
+
+os: linux
+dist: bionic
+
+git:
+  depth: false
+  quiet: true
+
+env:
+  global:
+    - ROLE_NAME: traefik
+  jobs:
+    - ANSIBLE_VERSION: 'ansible<2.10'
+    - ANSIBLE_VERSION: 'ansible>=2.10'
+
+before_install:
+  # Initialize LXD
+  - sudo chmod ugo+rw /var/lib/lxd/unix.socket
+  - lxd init --auto
+
+install: pip install ${ANSIBLE_VERSION} ansible-lint yamllint molecule git+https://github.com/bonddim/molecule-lxd
+
+before_script:
+  # Get yamllint config
+  - curl -sSo .yamllint https://raw.githubusercontent.com/ansible/galaxy/master/galaxy/importer/linters/yamllint.yaml
+  # Use actual Ansible Galaxy role name
+  - mv ../ansible-role-${ROLE_NAME} ../bonddim.${ROLE_NAME}
+  - cd ../bonddim.${ROLE_NAME}
+  # Install role requirements
+  - ansible-galaxy install -r meta/requirements.yml
+
+script: molecule test
+
+notifications:
+  webhooks:
+    urls: https://galaxy.ansible.com/api/v1/notifications/
+    if: (tag IS present) OR (branch = main)
+    on_failure: never
