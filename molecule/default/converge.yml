@@ -2,10 +2,15 @@
 - name: Converge
   hosts: all
   gather_facts: true
+  become: true
 
   pre_tasks:
+    - name: Install Docker daemon
+      include_role:
+        name: bonddim.docker
+      when: not "docker0" in ansible_interfaces
+
     - name: Install docker python library
-      become: true
       package:
         name: python3-docker
         state: present

@@ -1,3 +1,2 @@
 ---
-roles:
-  - name: bonddim.docker
+- name: bonddim.docker

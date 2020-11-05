@@ -1,6 +1,5 @@
 ---
-dependencies:
-  - role: bonddim.docker
+dependencies: []
 
 galaxy_info:
   author: Dmytro Bondar
