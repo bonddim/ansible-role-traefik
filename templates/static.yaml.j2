@@ -1,5 +1,5 @@
 ---
-### {{ ansible_managed }} static configuration
+### {{ ansible_managed }}
 entryPoints:
   web:
     address: :80
@@ -15,11 +15,11 @@ entryPoints:
     address: :443
     http:
       tls:
-        options: {{ traefik_ssl_config }}@file
+        options: {{ traefik_tls_config }}@file
         certResolver: letsEncrypt
         domains:
-          - main: {{ main_domainname }}
-            sans: [ "*.{{ main_domainname }}" ]
+          - main: {{ traefik_host_domainname }}
+            sans: [ "*.{{ traefik_host_domainname }}" ]
       middlewares:
         - default-security@file
 
@@ -27,7 +27,7 @@ entryPoints:
 certificatesResolvers:
   letsEncrypt:
     acme:
-      email: {{ email_address }}
+      email: {{ traefik_acme_email }}
       storage: {{ traefik_acme_storage_file }}
       {% if traefik_acme_staging %}
       caServer: https://acme-staging-v02.api.letsencrypt.org/directory
@@ -51,9 +51,13 @@ providers:
   {% if traefik_provider_docker %}
   # Docker configuration backend
   docker:
+    {% if traefik_provider_docker_defaultrule %}
     defaultRule: {{ traefik_provider_docker_defaultrule }}
+    {% elif traefik_host_domainname %}
+    defaultRule: "Host(`{{ '{{ normalize .Name }}' }}.{{ traefik_host_domainname }}`)"
+    {% endif %}
     exposedByDefault: {{ traefik_provider_docker_exposebydefault }}
-    endpoint: tcp://{{ docker_socket_proxy }}:2375
+    endpoint: "tcp://{{ docker_socket_proxy }}:2375"
     network: {{ traefik_network }}
   {% endif %}
 

@@ -94,7 +94,7 @@
       - "443:443"
     command:
       - --configfile "{{ traefik_configfile_static }}"
-    env: "{{ traefik_acme_dns_provider_env }}"
+    env: "{{ traefik_env }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ traefik_data }}:{{ traefik_data }}"
