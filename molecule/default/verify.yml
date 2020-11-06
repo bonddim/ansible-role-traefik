@@ -9,12 +9,10 @@
   tasks:
     - name: Send GET request to traefik dashboard
       uri:
-        url: http://127.0.0.1
+        url: http://127.0.0.1/dashboard/
         follow_redirects: all
         user: "{{ traefik_basic_auth_user }}"
         password: "{{ traefik_basic_auth_user }}"
-        headers:
-          Host: traefik
         method: GET
       register: dashboard
       until: dashboard.status == 200
