@@ -1,0 +1,28 @@
+---
+# assertion tasks for traefik role
+- name: Check user tls certificates
+  assert:
+    that:
+      - traefik_tls_certificates
+  when:
+    - traefik_enable_https
+    - traefik_tls_resolver == 'user'
+
+- name: Check acme tls variables
+  assert:
+    that:
+      - traefik_acme_email
+      - traefik_host_domainname
+  when:
+    - traefik_enable_https
+    - traefik_tls_resolver == 'acme'
+
+- name: Check acme tls dns provider
+  assert:
+    that:
+      - traefik_acme_dns_provider
+      - traefik_env
+  when:
+    - traefik_enable_https
+    - traefik_tls_resolver == 'acme'
+    - traefik_acme_challenge == 'dns'
