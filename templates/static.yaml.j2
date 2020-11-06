@@ -16,10 +16,12 @@ entryPoints:
     http:
       tls:
         options: {{ traefik_tls_config }}@file
+        {% if traefik_tls_resolver == 'acme' %}
         certResolver: letsEncrypt
         domains:
           - main: {{ traefik_host_domainname }}
             sans: [ "*.{{ traefik_host_domainname }}" ]
+        {% endif %}
       middlewares:
         - default-security@file
 

@@ -27,6 +27,14 @@ traefik_log_format: json
 traefik_enable_https: false
 traefik_enable_https_redirect: false
 traefik_tls_config: modern  # https://ssl-config.mozilla.org
+traefik_tls_resolver: acme  # possible values: acme, user
+
+# User's TLS certificates
+traefik_tls_certificates: []
+  # - cert: /path/to/cert
+  #   key: /path/to/key
+  # - cert: /path/to/another/cert
+  #   key: /path/to/another/key
 
 # ACME (Let's Encrypt) https://doc.traefik.io/traefik/https/acme
 traefik_acme_email: ""

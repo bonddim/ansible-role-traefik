@@ -47,6 +47,13 @@ http:
           server: ""
 
 tls:
+  {% if traefik_tls_resolver == 'user' %}
+  certificates:
+    {% for item in traefik_tls_certificates %}
+    - certFile: {{ item.cert }}
+      keyFile: {{ item.key }}
+    {% endfor %}
+  {% endif %}
   options:
     modern:
       minVersion: VersionTLS13
