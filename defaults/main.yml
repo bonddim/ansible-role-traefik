@@ -25,7 +25,7 @@ traefik_log_format: json
 
 # HTTPS
 traefik_enable_https: false
-traefik_enable_https_redirect: false
+traefik_enable_https_redirect: true
 traefik_tls_config: modern  # https://ssl-config.mozilla.org
 traefik_tls_resolver: acme  # possible values: acme, user
 
