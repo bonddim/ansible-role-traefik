@@ -1,6 +1,28 @@
 ---
-### {{ ansible_managed }} dynamic configuration
+### {{ ansible_managed }}
 http:
+  routers:
+  {% for item in traefik_http_routes %}
+    {{ item.name }}:
+      entrypoints: [ {{ traefik_enable_https | ternary('websecure', 'web') }} ]
+      rule: {% if item.rule | default(false) %}"{{ item.rule }}"
+            {% elif traefik_host_domainname %}"Host(`{{ item.name }}.{{ traefik_host_domainname }}`)"
+            {% else %}"Host(`{{ item.name }}`)"
+            {% endif %}
+      service: {{ item.service | default(item.name) }}
+      priority: {{ item.priority | default('0') }}
+  {% endfor %}
+
+  services:
+  {% for item in traefik_http_routes %}
+    {{ item.name }}:
+      loadBalancer:
+        servers:
+          {% for url in item.url | default([]) %}
+          - url: "{{ url }}"
+          {% endfor %}
+  {% endfor %}
+
   middlewares:
     default-security:
       chain:
