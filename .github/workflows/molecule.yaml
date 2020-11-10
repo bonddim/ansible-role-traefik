@@ -1,0 +1,40 @@
+---
+name: Molecule
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  molecule:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: bonddim.traefik
+
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v2
+        with:
+          path: bonddim.traefik
+
+      - name: LXD init
+        uses: bonddim/action-lxd@v1
+
+      - name: Install dependencies
+        run: |
+          sudo python3 -m pip install ansible-lint yamllint git+https://github.com/bonddim/molecule-lxd.git
+          ansible-galaxy role install bonddim.docker
+
+      - name: Get latest yamllint config
+        run: curl -sSo .yamllint https://raw.githubusercontent.com/ansible/galaxy/master/galaxy/importer/linters/yamllint.yaml
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: true

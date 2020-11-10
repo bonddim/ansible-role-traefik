@@ -1,0 +1,16 @@
+---
+name: Import to Ansible Galaxy
+
+on:
+  push:
+    tags:
+      - '*'
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Importing role
+        run: ansible-galaxy role import --api-key ${{ secrets.GALAXY_TOKEN }} ${GITHUB_REPOSITORY_OWNER} ${GITHUB_REPOSITORY#*/}
