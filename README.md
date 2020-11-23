@@ -52,8 +52,7 @@ ansible-galaxy role install bonddim.docker geerlingguy.pip
 Variables with default values from _defaults/main.yml_
 ```yaml
 traefik_data: /opt/traefik  # path on host to store traefik data
-traefik_network: traefik-proxy  # docker network name for traefik proxy
-docker_socket_proxy: socket-proxy  # docker network name for docker socket proxy container
+traefik_docker_network: bridge  # docker network name for traefik proxy
 traefik_host_domainname: ""  # your domain name
 traefik_env: {}  # dict with environment variables, mostly used for acme dns provider settings
 traefik_dashboard_enable: true  # enable/disable dashboard

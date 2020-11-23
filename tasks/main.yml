@@ -4,9 +4,9 @@
   import_tasks: assert.yml
   tags: traefik, assert
 
-- name: Ensure docker networks state
+- name: Ensure traefik docker network state
   docker_network:
-    name: "{{ traefik_network }}"
+    name: "{{ traefik_docker_network }}"
     state: present
   tags: traefik, traefik-networks
 
@@ -60,7 +60,7 @@
     restart_policy: unless-stopped
     container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
     networks:
-      - name: "{{ traefik_network }}"
+      - name: "{{ traefik_docker_network }}"
     networks_cli_compatible: true
     network_mode: default
     security_opts:

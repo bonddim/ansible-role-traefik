@@ -1,7 +1,7 @@
 ---
 # defaults file for traefik role
 traefik_data: /opt/traefik
-traefik_network: traefik-proxy
+traefik_docker_network: bridge
 
 traefik_host_domainname: ""
 traefik_env: {}
