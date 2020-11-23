@@ -2,7 +2,6 @@
 # defaults file for traefik role
 traefik_data: /opt/traefik
 traefik_network: traefik-proxy
-docker_socket_proxy: socket-proxy
 
 traefik_host_domainname: ""
 traefik_env: {}
@@ -48,6 +47,7 @@ traefik_acme_storage_file: "{{ traefik_data }}/acme.json"
 traefik_provider_docker: true
 traefik_provider_docker_exposebydefault: false
 traefik_provider_docker_defaultrule: ""
+traefik_provider_docker_endpoint: unix:///var/run/docker.sock
 
 # Custom routes
 traefik_http_routes: []

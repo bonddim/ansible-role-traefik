@@ -6,11 +6,8 @@
 
 - name: Ensure docker networks state
   docker_network:
-    name: "{{ item }}"
+    name: "{{ traefik_network }}"
     state: present
-  loop:
-    - "{{ traefik_network }}"
-    - "{{ docker_socket_proxy }}"
   tags: traefik, traefik-networks
 
 - name: Ensure traefik data directory state
@@ -51,30 +48,6 @@
   register: traefik_config
   tags: traefik, traefik-config
 
-- name: Launch docker-socket-proxy
-  docker_container:
-    name: "{{ docker_socket_proxy }}"
-    image: tecnativa/docker-socket-proxy:latest
-    pull: true
-    ignore_image: false
-    state: started
-    recreate: false
-    restart: false
-    restart_policy: unless-stopped
-    container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
-    networks:
-      - name: "{{ docker_socket_proxy }}"
-    networks_cli_compatible: true
-    network_mode: default
-    security_opts:
-      - no-new-privileges:true
-    env:
-      CONTAINERS: '1'
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-  tags: traefik, traefik-socket
-
-
 - name: Launch traefik container
   docker_container:
     name: traefik
@@ -88,7 +61,6 @@
     container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
     networks:
       - name: "{{ traefik_network }}"
-      - name: "{{ docker_socket_proxy }}"
     networks_cli_compatible: true
     network_mode: default
     security_opts:

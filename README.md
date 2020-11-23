@@ -9,8 +9,6 @@
 
 Deploy and configure [Traefik](https://doc.traefik.io/traefik/) docker container
 
-Docker socket is protected by [tecnativa/docker-socket-proxy](https://hub.docker.com/r/tecnativa/docker-socket-proxy) with the minimum necessary access.
-
 Clean role execution will give you:
   - running traefik instance on 80 port
   - enabled traefik dashboard secured with basic authentication
@@ -20,7 +18,6 @@ Clean role execution will give you:
 Docker daemon and Docker SDK for Python is required on target host
 
 ## Dependencies
-
 Minimal playbook to install Docker daemon and SDK on Debian family OS
 ```sh
 ansible-galaxy role install bonddim.docker
@@ -50,6 +47,7 @@ ansible-galaxy role install bonddim.docker geerlingguy.pip
     - role: geerlingguy.pip
       pip_install_packages: docker
 ```
+
 ## Role Variables
 Variables with default values from _defaults/main.yml_
 ```yaml
@@ -81,6 +79,7 @@ traefik_acme_staging: false  # enable staging server for debug
 traefik_provider_docker: true  # enable/disable docker provider
 traefik_provider_docker_exposebydefault: false  # enable/disable expose by default
 traefik_provider_docker_defaultrule: ""  # default rule for docker provider
+traefik_provider_docker_endpoint: unix:///var/run/docker.sock  # default docker endpoint
 traefik_http_routes: []  # user-defined http routes to other servers/services on host/network
   # - name: ""  # required
   #   rule: ""  # optional. Default is 'Host(`route_name.traefik_host_domainname`)' or 'Host(`route_name`)'
@@ -91,7 +90,6 @@ traefik_http_routes: []  # user-defined http routes to other servers/services on
 ```
 
 ## Example Playbook
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 ```yaml
 - name: minimal setup with http
   hosts: all
