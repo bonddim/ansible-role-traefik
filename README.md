@@ -79,7 +79,7 @@ traefik_acme_staging: false  # enable staging server for debug
 traefik_provider_docker: true  # enable/disable docker provider
 traefik_provider_docker_exposebydefault: false  # enable/disable expose by default
 traefik_provider_docker_defaultrule: ""  # default rule for docker provider
-traefik_provider_docker_endpoint: unix:///var/run/docker.sock  # default docker endpoint
+traefik_provider_docker_endpoint: ""  # default docker endpoint unix:///var/run/docker.sock
 traefik_http_routes: []  # user-defined http routes to other servers/services on host/network
   # - name: ""  # required
   #   rule: ""  # optional. Default is 'Host(`route_name.traefik_host_domainname`)' or 'Host(`route_name`)'

@@ -59,7 +59,9 @@ providers:
     defaultRule: "Host(`{{ '{{ normalize .Name }}' }}.{{ traefik_host_domainname }}`)"
     {% endif %}
     exposedByDefault: {{ traefik_provider_docker_exposebydefault }}
+    {% if traefik_provider_docker_endpoint %}
     endpoint: {{ traefik_provider_docker_endpoint }}
+    {% endif %}
     network: {{ traefik_network }}
   {% endif %}
 
