@@ -21,7 +21,7 @@
   file:
     path: "{{ traefik_home }}"
     state: directory
-    owner: "{{ traefik _user }}"
+    owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
     mode: 0755
 
@@ -32,6 +32,6 @@
     state: touch
     access_time: preserve
     modification_time: preserve
-    owner: "{{ traefik _user }}"
+    owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
     mode: 0600
