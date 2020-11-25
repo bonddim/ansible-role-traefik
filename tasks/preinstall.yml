@@ -5,10 +5,15 @@
     state: present
     system: true
 
+- name: Get all existing system groups
+  getent:
+    database: group
+
 - name: Create traefik system user
   user:
     name: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
+    groups: "{{ (traefik_provider_docker and not traefik_provider_docker_endpoint and 'docker' in getent_group) | ternary('docker', '') }}"
     comment: "Cloud Native Application Proxy"
     home: "{{ traefik_home }}"
     create_home: false
