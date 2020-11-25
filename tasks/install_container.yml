@@ -12,7 +12,7 @@
     ignore_image: false
     state: started
     recreate: false
-    restart: "{{ traefik_config.results.0.changed | default(false) }}"
+    restart: "{{ _traefik_restart.changed | default(false) }}"
     restart_policy: unless-stopped
     container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
     networks:
