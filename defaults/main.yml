@@ -50,7 +50,7 @@ traefik_acme_dns_disablepropagationcheck: false
 traefik_acme_staging: false
 
 # Providers
-traefik_provider_docker: true
+traefik_provider_docker: false
 traefik_provider_docker_exposebydefault: false
 traefik_provider_docker_defaultrule: ""
 traefik_provider_docker_endpoint: ""
