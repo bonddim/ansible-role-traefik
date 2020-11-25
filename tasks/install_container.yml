@@ -7,7 +7,7 @@
 - name: Launch traefik container
   docker_container:
     name: traefik
-    image: traefik:latest
+    image: "traefik:{{ traefik_version }}"
     pull: true
     ignore_image: false
     state: started
