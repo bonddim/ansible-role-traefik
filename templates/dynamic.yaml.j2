@@ -2,6 +2,15 @@
 ### {{ ansible_managed }}
 http:
   routers:
+  {% if traefik_dashboard_enable %}
+    traefik:
+      entrypoints: [ {{ traefik_enable_https | ternary('websecure', 'web') }} ]
+      rule: {% if traefik_host_domainname %}"Host(`traefik.{{ traefik_host_domainname }}`)"
+            {% else %}"PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+            {% endif %}
+      service: api@internal
+      middlewares: {{ traefik_dashboard_middlewares }}
+  {% endif %}
   {% for item in traefik_http_routes %}
     {{ item.name }}:
       entrypoints: [ {{ traefik_enable_https | ternary('websecure', 'web') }} ]

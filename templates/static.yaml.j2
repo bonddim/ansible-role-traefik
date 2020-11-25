@@ -59,8 +59,12 @@ providers:
     defaultRule: "Host(`{{ '{{ normalize .Name }}' }}.{{ traefik_host_domainname }}`)"
     {% endif %}
     exposedByDefault: {{ traefik_provider_docker_exposebydefault }}
-    endpoint: "tcp://{{ docker_socket_proxy }}:2375"
-    network: {{ traefik_network }}
+    {% if traefik_provider_docker_endpoint %}
+    endpoint: {{ traefik_provider_docker_endpoint }}
+    {% endif %}
+    {% if traefik_docker_network != 'bridge' %}
+    network: {{ traefik_docker_network }}
+    {% endif %}
   {% endif %}
 
   # File configuration backend
