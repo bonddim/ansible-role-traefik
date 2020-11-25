@@ -6,10 +6,6 @@ traefik_docker_network: bridge
 traefik_host_domainname: ""
 traefik_env: {}
 
-# Config files
-traefik_configfile_static: "{{ traefik_data }}/static.yaml"
-traefik_configfile_dynamic: "{{ traefik_data }}/dynamic.yaml"
-
 # Dashboard
 traefik_dashboard_enable: true
 traefik_dashboard_middlewares: auth-basic@file
@@ -41,7 +37,6 @@ traefik_acme_challenge: dns  # possible values: dns, tls, http
 traefik_acme_dns_provider: ""
 traefik_acme_dns_disablepropagationcheck: false
 traefik_acme_staging: false
-traefik_acme_storage_file: "{{ traefik_data }}/acme.json"
 
 # Providers
 traefik_provider_docker: true
