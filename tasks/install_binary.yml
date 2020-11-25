@@ -1,0 +1,57 @@
+---
+- name: Generate systemd service file
+  template:
+    dest: /etc/systemd/system/traefik.service
+    src: traefik.service.j2
+    owner: root
+    group: root
+    mode: 0640
+  notify: daemon_reload
+
+- name: Check installed version
+  shell:
+    executable: /bin/bash
+    cmd: set -o pipefail && traefik version | head -1 | grep -Po '[\d\.]+'
+  register: _traefik_installed
+  changed_when: false
+  failed_when: false
+
+- name: Check latest release name
+  shell:
+    cmd: >
+      curl -sH "Accept: application/vnd.github.v3+json" https://api.github.com/repos/traefik/traefik/releases/latest | grep -Po '"tag_name": "\K.*?(?=")'
+    warn: false
+  changed_when: false
+  register: _traefik_release
+  when: traefik_version == 'latest'
+
+- name: Get traefik version number
+  set_fact:
+    _traefik_version: "{{ (traefik_version == 'latest') | ternary(_traefik_release.stdout, traefik_version) | regex_replace('[a-z]') }}"
+
+- when: _traefik_version is version(_traefik_installed.stdout | default('0', true), '!=' )
+  block:
+    - name: Stop service before update
+      systemd:
+        name: traefik.service
+        state: stopped
+
+    - name: Download and extract archive
+      unarchive:
+        dest: /tmp
+        src: "https://github.com/traefik/traefik/releases/download/v{{ _traefik_version }}/traefik_v{{ _traefik_version }}_linux_amd64.tar.gz"
+        remote_src: true
+        list_files: false
+        keep_newer: false
+        mode: 0640
+
+    - name: Copy binary to install location
+      copy:
+        dest: "{{ traefik_install_path }}"
+        src: /tmp/traefik
+        remote_src: true
+        force: true
+        owner: root
+        group: root
+        mode: 0755
+      notify: traefik_start

@@ -1,0 +1,22 @@
+---
+- name: Generate static config file
+  template:
+    dest: "{{ traefik_configfile_static }}"
+    src: static.yaml.j2
+    lstrip_blocks: true
+    trim_blocks: true
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+    mode: 0640
+  register: _traefik_restart
+  notify: traefik_restart
+
+- name: Generate dynamic config file
+  template:
+    dest: "{{ traefik_configfile_dynamic }}"
+    src: dynamic.yaml.j2
+    lstrip_blocks: true
+    trim_blocks: true
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+    mode: 0640

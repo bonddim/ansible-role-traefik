@@ -6,7 +6,7 @@ galaxy_info:
   license: "license (MIT)"
 
   role_name: traefik
-  description: "Deploy traefik container with TLS support"
+  description: "Deploy traefik v2 with TLS support"
   github_branch: main
 
   min_ansible_version: 2.9

@@ -3,17 +3,22 @@
   hosts: all
   gather_facts: true
   become: true
+  vars:
+    traefik_install_method: "{{ lookup('env', 'INSTALL_METHOD') }}"
+    traefik_provider_docker: "{{ (traefik_install_method == 'container') | ternary(true, false) }}"
 
   pre_tasks:
-    - name: Install Docker daemon
-      include_role:
-        name: bonddim.docker
-      when: not "docker0" in ansible_interfaces
+    - when: traefik_install_method == 'container'
+      block:
+        - name: Install Docker daemon
+          include_role:
+            name: bonddim.docker
+          when: not "docker0" in ansible_interfaces
 
-    - name: Install docker python library
-      package:
-        name: python3-docker
-        state: present
+        - name: Install docker python library
+          package:
+            name: python3-docker
+            state: present
 
   roles:
     - bonddim.traefik

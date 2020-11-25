@@ -4,76 +4,17 @@
   import_tasks: assert.yml
   tags: traefik, assert
 
-- name: Ensure traefik docker network state
-  docker_network:
-    name: "{{ traefik_docker_network }}"
-    state: present
-  tags: traefik, traefik-networks
+- name: Run pre-installation tasks
+  import_tasks: preinstall.yml
+  tags: traefik, traefik-preinstall
 
-- name: Ensure traefik data directory state
-  become: true
-  file:
-    path: "{{ traefik_data }}"
-    state: directory
-    owner: root
-    group: root
-    mode: '750'
-  tags: traefik, traefik-dir
-
-- name: Ensure acme storage state
-  become: true
-  file:
-    path: "{{ traefik_acme_storage_file }}"
-    state: touch
-    access_time: preserve
-    modification_time: preserve
-    owner: root
-    group: root
-    mode: '600'
-  tags: traefik, traefik-acme
-
-- name: Generate traefik config files
-  become: true
-  template:
-    dest: "{{ item.dest }}"
-    src: "{{ item.src }}"
-    lstrip_blocks: true
-    trim_blocks: true
-    owner: root
-    group: root
-    mode: '640'
-  loop:
-    - { src: static.yaml.j2, dest: "{{ traefik_configfile_static }}" }
-    - { src: dynamic.yaml.j2, dest: "{{ traefik_configfile_dynamic }}" }
-  register: traefik_config
+- name: Run configuration tasks
+  import_tasks: config.yml
   tags: traefik, traefik-config
 
-- name: Launch traefik container
-  docker_container:
-    name: traefik
-    image: traefik:latest
-    pull: true
-    ignore_image: false
-    state: started
-    recreate: false
-    restart: "{{ traefik_config.results.0.changed | default(false) }}"
-    restart_policy: unless-stopped
-    container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
-    networks:
-      - name: "{{ traefik_docker_network }}"
-    networks_cli_compatible: true
-    network_mode: default
-    security_opts:
-      - no-new-privileges:true
-    published_ports:
-      - "80:80"
-      - "443:443"
-    command:
-      - --configfile "{{ traefik_configfile_static }}"
-    env: "{{ traefik_env }}"
-    volumes: "{{ traefik_mount_volumes | select | list }}"
-  vars:
-    traefik_mount_volumes:
-      - "{{ traefik_data }}:{{ traefik_data }}"
-      - "{{ traefik_provider_docker_endpoint | ternary('', '/var/run/docker.sock:/var/run/docker.sock:ro') }}"
-  tags: traefik, traefik-container
+- name: Run install method tasks
+  include_tasks:
+    file: "install_{{ traefik_install_method }}.yml"
+    apply:
+      tags: traefik, traefik-install
+  tags: traefik, traefik-install
