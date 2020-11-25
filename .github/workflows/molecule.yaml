@@ -15,6 +15,11 @@ jobs:
     defaults:
       run:
         working-directory: bonddim.traefik
+    strategy:
+      matrix:
+        install_method:
+          - binary
+          - container
 
     steps:
       - name: Checks-out repository
@@ -36,5 +41,6 @@ jobs:
       - name: Run Molecule tests
         run: molecule test
         env:
+          INSTALL_METHOD: ${{ matrix.install_method }}
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: true

@@ -13,5 +13,9 @@ platforms:
       alias: "${MOLECULE_DISTRO:-ubuntu/18.04}"
 provisioner:
   name: ansible
+  env:
+    INSTALL_METHOD: "${INSTALL_METHOD:-binary}"
 verifier:
   name: ansible
+  env:
+    INSTALL_METHOD: "${INSTALL_METHOD:-binary}"
