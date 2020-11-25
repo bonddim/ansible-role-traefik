@@ -1,0 +1,20 @@
+---
+- name: Ensure traefik data directory state
+  become: true
+  file:
+    path: "{{ traefik_data }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Ensure acme storage state
+  become: true
+  file:
+    path: "{{ traefik_acme_storage_file }}"
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+    owner: root
+    group: root
+    mode: 0600

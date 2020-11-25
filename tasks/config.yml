@@ -1,0 +1,15 @@
+---
+- name: Generate traefik config files
+  become: true
+  template:
+    dest: "{{ item.dest }}"
+    src: "{{ item.src }}"
+    lstrip_blocks: true
+    trim_blocks: true
+    owner: root
+    group: root
+    mode: 0640
+  loop:
+    - { src: static.yaml.j2, dest: "{{ traefik_configfile_static }}" }
+    - { src: dynamic.yaml.j2, dest: "{{ traefik_configfile_dynamic }}" }
+  register: traefik_config
