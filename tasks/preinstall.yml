@@ -1,11 +1,28 @@
 ---
-- name: Ensure traefik data directory state
+- name: Create traefik system group
+  group:
+    name: "{{ traefik_group }}"
+    state: present
+    system: true
+
+- name: Create traefik system user
+  user:
+    name: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+    comment: "Cloud Native Application Proxy"
+    home: "{{ traefik_home }}"
+    create_home: false
+    shell: /bin/false
+    state: present
+    system: true
+
+- name: Create traefik data directory
   become: true
   file:
     path: "{{ traefik_home }}"
     state: directory
-    owner: root
-    group: root
+    owner: "{{ traefik _user }}"
+    group: "{{ traefik_group }}"
     mode: 0755
 
 - name: Ensure acme storage state
@@ -15,6 +32,6 @@
     state: touch
     access_time: preserve
     modification_time: preserve
-    owner: root
-    group: root
+    owner: "{{ traefik _user }}"
+    group: "{{ traefik_group }}"
     mode: 0600

@@ -1,6 +1,9 @@
 ---
 # defaults file for traefik role
 traefik_home: /opt/traefik
+traefik_user: traefik
+traefik_group: traefik
+
 traefik_docker_network: bridge
 
 traefik_host_domainname: ""

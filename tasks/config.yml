@@ -5,8 +5,8 @@
     src: static.yaml.j2
     lstrip_blocks: true
     trim_blocks: true
-    owner: root
-    group: root
+    owner: "{{ traefik _user }}"
+    group: "{{ traefik_group }}"
     mode: 0640
   register: _traefik_restart
 
@@ -16,6 +16,6 @@
     src: dynamic.yaml.j2
     lstrip_blocks: true
     trim_blocks: true
-    owner: root
-    group: root
+    owner: "{{ traefik _user }}"
+    group: "{{ traefik_group }}"
     mode: 0640
