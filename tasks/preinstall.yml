@@ -2,7 +2,7 @@
 - name: Ensure traefik data directory state
   become: true
   file:
-    path: "{{ traefik_data }}"
+    path: "{{ traefik_home }}"
     state: directory
     owner: root
     group: root

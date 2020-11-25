@@ -30,5 +30,5 @@
     volumes: "{{ traefik_mount_volumes | select | list }}"
   vars:
     traefik_mount_volumes:
-      - "{{ traefik_data }}:{{ traefik_data }}"
+      - "{{ traefik_home }}:{{ traefik_home }}"
       - "{{ traefik_provider_docker_endpoint | ternary('', '/var/run/docker.sock:/var/run/docker.sock:ro') }}"
