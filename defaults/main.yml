@@ -1,13 +1,21 @@
 ---
 # defaults file for traefik role
-traefik_home: /opt/traefik
+# Common vars
+traefik_home: /etc/traefik
 traefik_user: traefik
 traefik_group: traefik
 
-traefik_docker_network: bridge
+traefik_version: latest
+traefik_install_method: container  ## possible values: binary, container
 
 traefik_host_domainname: ""
 traefik_env: {}
+
+# Binary related vars
+traefik_install_path: /usr/local/bin/traefik
+
+# Container related vars
+traefik_docker_network: bridge
 
 # Dashboard
 traefik_dashboard_enable: true

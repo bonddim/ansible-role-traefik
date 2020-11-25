@@ -9,6 +9,7 @@
     group: "{{ traefik_group }}"
     mode: 0640
   register: _traefik_restart
+  notify: traefik_restart
 
 - name: Generate dynamic config file
   template:

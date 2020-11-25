@@ -12,7 +12,9 @@
   import_tasks: config.yml
   tags: traefik, traefik-config
 
-- debug:
 - name: Run install method tasks
-  import_tasks: install_container.yml
+  include_tasks:
+    file: "install_{{ traefik_install_method }}.yml"
+    apply:
+      tags: traefik, traefik-install
   tags: traefik, traefik-install

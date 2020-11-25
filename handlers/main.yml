@@ -1,0 +1,22 @@
+---
+# handlers file for traefik role
+- name: Reload systemd daemon and activate traefik
+  systemd:
+    name: traefik.service
+    state: restarted
+    enabled: true
+    daemon_reload: true
+  listen: daemon_reload
+
+- name: Start traefik service
+  systemd:
+    name: traefik.service
+    state: started
+  listen: traefik_start
+
+- name: Restart traefik service
+  systemd:
+    name: traefik.service
+    state: restarted
+  listen: traefik_restart
+  when: traefik_install_method == 'binary'
