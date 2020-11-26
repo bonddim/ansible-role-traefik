@@ -96,7 +96,7 @@ traefik_acme_dns_provider: ""  # your dns provider
 traefik_acme_staging: false  # enable staging server for debug
 
 # Providers
-traefik_provider_docker: true  # enable/disable docker provider
+traefik_provider_docker: false  # enable/disable docker provider
 traefik_provider_docker_exposebydefault: false  # enable/disable expose by default
 traefik_provider_docker_defaultrule: ""  # default rule for docker provider
 traefik_provider_docker_endpoint: ""  # default docker endpoint unix:///var/run/docker.sock
