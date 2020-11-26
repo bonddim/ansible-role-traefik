@@ -31,4 +31,7 @@ galaxy_info:
     - proxy
     - reverseproxy
     - letsencrypt
-    - docker
+    - system
+    - web
+    - networking
+    - cloud
