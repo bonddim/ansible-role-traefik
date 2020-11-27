@@ -107,8 +107,14 @@ traefik_http_routes: []  # user-defined http routes to other servers/services on
   #   rule: ""  # optional. Default is 'Host(`route_name.traefik_host_domainname`)' or 'Host(`route_name`)'
   #   service: ""  # optional. Default is route_name
   #   url: []  # required. List of server(s) url, example: [ http://private-ip-server-1/ ]
-  #   middlewares: []  # optional. List of middlewares for route
+  #   middlewares: ""  # optional. List or comma-separated string of middlewares for route
   #   priority: ""  # optional. Default is '0'
+
+# Custom middlewares
+traefik_http_middlewares: []  # user-defined http middlewares
+  # - name: ""  # required. Middleware name
+  #   type: ""  # required. Middleware type
+  #   options: {}  # middleware configuration options
 ```
 
 ## Example Playbook
@@ -146,6 +152,7 @@ traefik_http_routes: []  # user-defined http routes to other servers/services on
   roles:
     - bonddim.traefik
 ```
+See my [home-server](https://github.com/bonddim/home-server) playbooks for real use examples
 
 ## License
 MIT

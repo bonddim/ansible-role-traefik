@@ -19,6 +19,7 @@ http:
             {% else %}"Host(`{{ item.name }}`)"
             {% endif %}
       service: {{ item.service | default(item.name) }}
+      middlewares: {{ item.middlewares | default('') }}
       priority: {{ item.priority | default('0') }}
   {% endfor %}
 
@@ -76,6 +77,15 @@ http:
         customResponseHeaders:
           X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex,"
           server: ""
+
+    {% for item in traefik_http_middlewares %}
+    {{ item.name }}:
+      {{ item.type }}:
+        {% for key, value in item.options.items() %}
+        {{ key }}: {{ value }}
+        {% endfor %}
+    {% endfor %}
+
 
 tls:
   {% if traefik_tls_resolver == 'user' %}
