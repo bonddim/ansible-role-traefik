@@ -152,6 +152,7 @@ traefik_http_middlewares: []  # user-defined http middlewares
   roles:
     - bonddim.traefik
 ```
+See my [home-server](https://github.com/bonddim/home-server) playbooks for real use examples
 
 ## License
 MIT
