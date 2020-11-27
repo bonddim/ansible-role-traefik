@@ -15,10 +15,7 @@
     restart: "{{ _traefik_restart.changed | default(false) }}"
     restart_policy: unless-stopped
     container_default_behavior: "{{ (ansible_version.full is version('2.10', '>=')) | ternary('compatibility', omit) }}"
-    networks:
-      - name: "{{ traefik_docker_network }}"
-    networks_cli_compatible: true
-    network_mode: default
+    network_mode: "{{ traefik_docker_network }}"
     security_opts:
       - no-new-privileges:true
     published_ports:

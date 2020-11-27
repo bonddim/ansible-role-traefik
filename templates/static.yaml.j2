@@ -62,9 +62,6 @@ providers:
     {% if traefik_provider_docker_endpoint %}
     endpoint: {{ traefik_provider_docker_endpoint }}
     {% endif %}
-    {% if traefik_docker_network != 'bridge' %}
-    network: {{ traefik_docker_network }}
-    {% endif %}
   {% endif %}
 
   # File configuration backend
