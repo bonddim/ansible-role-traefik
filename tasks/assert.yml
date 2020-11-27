@@ -1,5 +1,10 @@
 ---
 # assertion tasks for traefik role
+- name: Check traefik version
+  assert:
+    that:
+      - traefik_version == 'latest' or traefik_version is match("v(\d+\.){2}\d+")
+
 - name: Check user tls certificates
   assert:
     that:
