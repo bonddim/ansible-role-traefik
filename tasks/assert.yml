@@ -4,30 +4,44 @@
   assert:
     that:
       - traefik_version == 'latest' or traefik_version is match("v(\d+\.){2}\d+")
+    fail_msg: traefik_version should be 'latest' or in 'vX.Y.Z' format
 
 - name: Check user tls certificates
   assert:
     that:
       - traefik_tls_certificates
   when:
-    - traefik_enable_https
+    - traefik_enable_https | bool
     - traefik_tls_resolver == 'user'
 
 - name: Check acme tls variables
   assert:
     that:
-      - traefik_acme_email
-      - traefik_host_domainname
+      - traefik_acme_email | length > 0
+      - traefik_host_domainname | length > 0
   when:
-    - traefik_enable_https
+    - traefik_enable_https | bool
     - traefik_tls_resolver == 'acme'
 
 - name: Check acme tls dns provider
   assert:
     that:
-      - traefik_acme_dns_provider
-      - traefik_env
+      - traefik_acme_dns_provider | length > 0
+      - traefik_env | length > 0
   when:
-    - traefik_enable_https
+    - traefik_enable_https | bool
     - traefik_tls_resolver == 'acme'
     - traefik_acme_challenge == 'dns'
+
+- name: Get existing system groups
+  getent:
+    database: group
+
+- name: Check docker availability
+  assert:
+    that:
+      - "'docker' in getent_group"
+    fail_msg: Install docker or set traefik_provider_docker_endpoint variable first
+  when:
+    - traefik_provider_docker | bool
+    - traefik_provider_docker_endpoint | length == 0
