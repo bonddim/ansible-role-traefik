@@ -11,7 +11,7 @@
 - name: Check installed version
   shell:
     executable: /bin/bash
-    cmd: set -o pipefail && traefik version | head -1 | grep -Po '[\d\.]+'
+    cmd: set -o pipefail && traefik version | head -1 | grep -Po '[\d\.]+\S*'
   register: _traefik_installed
   changed_when: false
   failed_when: false
@@ -27,9 +27,9 @@
 
 - name: Get traefik version number
   set_fact:
-    _traefik_version: "{{ (traefik_version == 'latest') | ternary(_traefik_release.stdout, traefik_version) | regex_replace('[a-z]') }}"
+    _traefik_version: "{{ (traefik_version == 'latest') | ternary(_traefik_release.stdout, traefik_version) }}"
 
-- when: _traefik_version is version(_traefik_installed.stdout | default('0', true), '!=' )
+- when: _traefik_version | regex_replace('^v') is version(_traefik_installed.stdout | default('0', true), '!=' )
   block:
     - name: Stop service before update
       systemd:
@@ -39,7 +39,7 @@
     - name: Download and extract archive
       unarchive:
         dest: /tmp
-        src: "https://github.com/traefik/traefik/releases/download/v{{ _traefik_version }}/traefik_v{{ _traefik_version }}_linux_amd64.tar.gz"
+        src: "https://github.com/traefik/traefik/releases/download/{{ _traefik_version }}/traefik_{{ _traefik_version }}_linux_amd64.tar.gz"
         remote_src: true
         list_files: false
         keep_newer: false
