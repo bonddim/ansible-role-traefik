@@ -5,8 +5,15 @@
     src: traefik.service.j2
     owner: root
     group: root
-    mode: 0640
-  notify: daemon_reload
+    mode: 0644
+  register: _traefik_service_file
+
+- name: Reload systemd daemon
+  systemd:
+    name: traefik.service
+    enabled: true
+    daemon_reload: true
+  when: _traefik_service_file.changed
 
 - name: Check installed version
   shell:
@@ -31,11 +38,6 @@
 
 - when: _traefik_version | regex_replace('^v') is version(_traefik_installed.stdout | default('0', true), '!=' )
   block:
-    - name: Stop service before update
-      systemd:
-        name: traefik.service
-        state: stopped
-
     - name: Download and extract archive
       unarchive:
         dest: /tmp
@@ -44,6 +46,11 @@
         list_files: false
         keep_newer: false
         mode: 0640
+
+    - name: Stop service before update
+      systemd:
+        name: traefik.service
+        state: stopped
 
     - name: Copy binary to install location
       copy:
@@ -54,4 +61,8 @@
         owner: root
         group: root
         mode: 0755
-      notify: traefik_start
+  always:
+    - name: Ensure traefik.service is started
+      systemd:
+        name: traefik.service
+        state: started
