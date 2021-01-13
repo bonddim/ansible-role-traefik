@@ -5,7 +5,7 @@
 [Unit]
 Description=Traefik
 Documentation=https://doc.traefik.io/traefik/
-After=network-online.target
+After=network-online.target docker.service
 AssertFileIsExecutable={{ traefik_install_path }}
 AssertPathExists={{ traefik_configfile_static }}
 
