@@ -44,6 +44,7 @@ traefik_tls_certificates: []
 
 # ACME (Let's Encrypt) https://doc.traefik.io/traefik/https/acme
 traefik_acme_email: ""
+traefik_acme_domains: [ { main: "{{ traefik_host_domainname }}", sans: [ "*.{{ traefik_host_domainname }}" ] } ]
 traefik_acme_challenge: dns  # possible values: dns, tls, http
 traefik_acme_dns_provider: ""
 traefik_acme_dns_disablepropagationcheck: false
