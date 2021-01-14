@@ -3,8 +3,8 @@
 - name: Check traefik version
   assert:
     that:
-      - traefik_version == 'latest' or traefik_version is match("v(\d+\.){2}\d+")
-    fail_msg: traefik_version should be 'latest' or in 'vX.Y.Z' format
+      - traefik_version == 'latest' or (traefik_version is match("v(\d+\.){2}\d+") and traefik_version is version('v2.0', '>='))
+    fail_msg: traefik_version should be 'latest' or in 'vX.Y.Z' format and greater than v2.0
 
 - name: Check user tls certificates
   assert:
