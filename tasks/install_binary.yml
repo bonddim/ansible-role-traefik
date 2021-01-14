@@ -23,21 +23,30 @@
   changed_when: false
   failed_when: false
 
-- name: Check latest release name
-  shell:
-    cmd: >
-      curl -sH "Accept: application/vnd.github.v3+json" https://api.github.com/repos/traefik/traefik/releases/latest | grep -Po '"tag_name": "\K.*?(?=")'
-    warn: false
-  changed_when: false
-  register: _traefik_release
-  when: traefik_version == 'latest'
+- when: traefik_version == 'latest'
+  block:
+    - name: Get all traefik releases
+      uri:
+        url: https://api.github.com/repos/traefik/traefik/releases
+        method: GET
+        headers:
+          Accept: application/vnd.github.v3+json
+      register: _traefik_releases
 
-- name: Get traefik version number
+    - name: Get latest traefik release name
+      set_fact:
+        _traefik_release: "{{ (_traefik_releases.json | map(attribute='tag_name') | reject('<', 'v2.0.0') | sort)[-1] }}"
+
+- name: Set traefik version number
   set_fact:
-    _traefik_version: "{{ (traefik_version == 'latest') | ternary(_traefik_release.stdout, traefik_version) }}"
+    _traefik_version: "{{ (traefik_version == 'latest') | ternary(_traefik_release, traefik_version) }}"
 
 - when: _traefik_version | regex_replace('^v') is version(_traefik_installed.stdout | default('0', true), '!=' )
   block:
+    - name: Show traefik version
+      debug:
+        msg: "Traefik version to install: {{ _traefik_version }}"
+
     - name: Download and extract archive
       unarchive:
         dest: /tmp
