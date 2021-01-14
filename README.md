@@ -91,6 +91,7 @@ traefik_tls_certificates: []  # list of user certificates when traefik_tls_resol
 
 # ACME (Let's Encrypt) https://doc.traefik.io/traefik/https/acme
 traefik_acme_email: ""  # email for acme registration
+traefik_acme_domains: [ { main: "{{ traefik_host_domainname }}", sans: [ "*.{{ traefik_host_domainname }}" ] } ]
 traefik_acme_challenge: dns  # possible values: dns, tls, http
 traefik_acme_dns_provider: ""  # your dns provider
 traefik_acme_staging: false  # enable staging server for debug
