@@ -8,12 +8,11 @@
     mode: 0644
   register: _traefik_service_file
 
-- name: Reload systemd daemon
+- name: Ensure traefik.service is enabled
   systemd:
     name: traefik.service
     enabled: true
-    daemon_reload: true
-  when: _traefik_service_file.changed
+    daemon_reload: "{{ _traefik_service_file.changed }}"
 
 - name: Check installed version
   shell:
