@@ -36,9 +36,6 @@ jobs:
           sudo python3 -m pip install ansible-lint yamllint git+https://github.com/bonddim/molecule-lxd.git
           ansible-galaxy role install bonddim.docker
 
-      - name: Get latest yamllint config
-        run: curl -sSo .yamllint https://raw.githubusercontent.com/ansible/galaxy/master/galaxy/importer/linters/yamllint.yaml
-
       - name: Run Molecule tests
         run: molecule test
         env:
