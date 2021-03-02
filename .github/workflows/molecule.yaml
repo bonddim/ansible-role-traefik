@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo python3 -m pip install ansible-lint yamllint git+https://github.com/bonddim/molecule-lxd.git
+          sudo python3 -m pip install ansible-lint yamllint molecule-lxd
           ansible-galaxy role install bonddim.docker
 
       - name: Run Molecule tests
