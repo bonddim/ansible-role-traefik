@@ -1,0 +1,16 @@
+pull_request_rules:
+  - name: Automatic merge on approval
+    conditions:
+      - author=bonddim
+      - check-success=Molecule
+    actions:
+      merge:
+        method: squash
+        strict: smart
+        strict_method: rebase
+
+  - name: Delete head branch after merge
+    conditions:
+      - merged
+    actions:
+      delete_head_branch: {}
