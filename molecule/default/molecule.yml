@@ -1,11 +1,12 @@
 ---
 dependency:
-  name: galaxy
+  name: shell
+  command: ansible-galaxy role install bonddim.docker
 driver:
   name: lxd
 lint: |
   set -e
-  ansible-lint --exclude .github --exclude molecule -p
+  ansible-lint
 platforms:
   - name: instance
     source:

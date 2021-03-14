@@ -1,0 +1,3 @@
+ansible-lint==5.0.1
+molecule-lxd>=0.2
+yamllint>=1.26.0
