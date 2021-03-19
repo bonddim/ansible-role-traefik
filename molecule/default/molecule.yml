@@ -9,6 +9,7 @@ lint: |
   ansible-lint
 platforms:
   - name: instance
+    url: "${LXD_HOST:-unix:}"
     source:
       alias: "${MOLECULE_DISTRO:-ubuntu/20.04}"
 provisioner:
