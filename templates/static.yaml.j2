@@ -64,7 +64,7 @@ providers:
 
   # File configuration backend
   file:
-    filename: {{ traefik_configfile_dynamic }}
+    directory: {{ traefik_configdir_dynamic }}
     watch: true
 
 # API and dashboard configuration
