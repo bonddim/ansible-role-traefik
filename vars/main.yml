@@ -1,7 +1,7 @@
 ---
 # vars file for traefik role
 # Config files
-traefik_configfile_static: "{{ traefik_home }}/static.yaml"
+traefik_configfile_static: "{{ traefik_home }}/traefik.yaml"
 traefik_configdir_dynamic: "{{ traefik_home }}/conf.d"
 
 # ACME storage file
