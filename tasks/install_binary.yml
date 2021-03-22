@@ -62,7 +62,7 @@
 
     - name: Copy binary to install location
       copy:
-        dest: "{{ traefik_install_path }}"
+        dest: "{{ traefik_bin_path }}"
         src: /tmp/traefik
         remote_src: true
         force: true
