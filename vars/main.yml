@@ -1,8 +1,10 @@
 ---
 # vars file for traefik role
-# Config files
-traefik_configfile_static: "{{ traefik_home }}/traefik.yaml"
-traefik_configdir_dynamic: "{{ traefik_home }}/conf.d"
+traefik_user: traefik
+traefik_group: '{{ traefik_user }}'
 
-# ACME storage file
-traefik_acme_storage_file: "{{ traefik_home }}/acme.json"
+traefik_install_path: /usr/local/bin/traefik
+traefik_home: /etc/traefik
+traefik_configfile_static: '{{ traefik_home }}/traefik.yaml'
+traefik_configdir_dynamic: '{{ traefik_home }}/conf.d'
+traefik_acme_storage_file: '{{ traefik_home }}/acme.json'
