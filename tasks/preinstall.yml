@@ -21,14 +21,16 @@
     state: present
     system: true
 
-- name: Create traefik data directory
-  become: true
+- name: Create traefik data directories
   file:
-    path: "{{ traefik_home }}"
+    path: "{{ item }}"
     state: directory
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
     mode: 0755
+  loop:
+    - "{{ traefik_home }}"
+    - "{{ traefik_configdir_dynamic }}"
 
 - name: Ensure acme storage state
   become: true

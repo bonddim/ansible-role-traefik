@@ -11,14 +11,6 @@
   register: _traefik_restart
   notify: traefik_restart
 
-- name: Create directory for dynamic configs
-  file:
-    path: "{{ traefik_configdir_dynamic }}"
-    state: directory
-    owner: "{{ traefik_user }}"
-    group: "{{ traefik_group }}"
-    mode: 0755
-
 - name: Generate default dynamic config
   template:
     dest: "{{ traefik_configdir_dynamic }}/default.yaml"
