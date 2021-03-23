@@ -11,7 +11,7 @@
   register: _traefik_restart
   notify: traefik_restart
 
-- name: Generate default dynamic config
+- name: Generate dynamic config (default)
   template:
     dest: "{{ traefik_configdir_dynamic }}/default.yaml"
     src: default.yaml.j2
@@ -20,3 +20,12 @@
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
     mode: 0640
+
+- name: Generate dynamic config (custom)
+  copy:
+    dest: "{{ traefik_configdir_dynamic }}/custom.yaml"
+    content: "{{ traefik_custom_config | to_yaml(indent=2,width=180) }}"
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+    mode: 0640
+  when: traefik_custom_config | length > 0
