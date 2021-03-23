@@ -13,7 +13,7 @@
       - traefik_host_domainname | length > 0
   when:
     - traefik_enable_https | bool
-    - traefik_tls_resolver == 'acme'
+    - traefik_acme_enable | bool
 
 - name: Check acme tls dns provider
   assert:
@@ -22,7 +22,7 @@
       - traefik_env | length > 0
   when:
     - traefik_enable_https | bool
-    - traefik_tls_resolver == 'acme'
+    - traefik_acme_enable | bool
     - traefik_acme_challenge == 'dns'
 
 - name: Get existing system groups

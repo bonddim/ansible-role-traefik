@@ -15,7 +15,7 @@ entryPoints:
     address: :443
     http:
       tls:
-        {% if traefik_tls_resolver == 'acme' %}
+        {% if traefik_acme_enable | bool %}
         certResolver: letsEncrypt
         domains: {{ traefik_acme_domains }}
         {% endif %}
