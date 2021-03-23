@@ -4,7 +4,7 @@ dependencies: []
 galaxy_info:
   author: Dmytro Bondar
   license: "license (MIT)"
-
+  namespace: bonddim
   role_name: traefik
   description: "Deploy traefik v2 with TLS support"
   github_branch: main

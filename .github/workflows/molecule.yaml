@@ -16,10 +16,8 @@ jobs:
     # skip job on pull requests from base repository
     if: github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: bonddim.traefik
     strategy:
+      fail-fast: false
       matrix:
         install_method:
           - binary
@@ -27,8 +25,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          path: bonddim.traefik
       - uses: bonddim/action-lxd-init@stable
       - name: Install dependencies
         run: sudo python3 -m pip install --no-cache-dir --requirement .github/workflows/requirements.txt
