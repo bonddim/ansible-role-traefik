@@ -5,15 +5,11 @@
     state: present
     system: true
 
-- name: Get all existing system groups
-  getent:
-    database: group
-
 - name: Create traefik system user
   user:
     name: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
-    groups: "{{ (traefik_provider_docker and not traefik_provider_docker_endpoint and 'docker' in getent_group) | ternary('docker', '') }}"
+    groups: "{{ (traefik_provider_docker and not traefik_provider_docker_endpoint and 'docker' in getent_group) | ternary('docker', omit) }}"
     comment: "Cloud Native Application Proxy"
     home: "{{ traefik_home }}"
     create_home: false
@@ -21,24 +17,18 @@
     state: present
     system: true
 
-- name: Create traefik data directories
+- name: Create traefik directories and acme storage
   file:
-    path: "{{ item }}"
-    state: directory
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
-    mode: 0755
-  loop:
-    - "{{ traefik_home }}"
-    - "{{ traefik_configdir_dynamic }}"
-
-- name: Ensure acme storage state
-  become: true
-  file:
-    path: "{{ traefik_acme_storage_file }}"
-    state: touch
+    mode: "{{ item.mode }}"
     access_time: preserve
     modification_time: preserve
-    owner: "{{ traefik_user }}"
-    group: "{{ traefik_group }}"
-    mode: 0600
+  loop:
+    - { mode: "0755", state: directory, path: "{{ traefik_home }}" }
+    - { mode: "0755", state: directory, path: "{{ traefik_configdir_dynamic }}" }
+    - { mode: "0600", state: touch, path: "{{ traefik_acme_storage_file }}" }
+  loop_control:
+    label: "{{ item.path }}"
