@@ -8,7 +8,7 @@
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
     mode: 0640
-  register: _traefik_restart
+  register: _traefik_config
   notify: traefik_restart
 
 - name: Generate dynamic config (default)
