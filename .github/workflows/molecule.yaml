@@ -19,15 +19,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        ansible:
+          - 'ansible<2.10'
+          - 'ansible>=2.10'
         install_method:
           - binary
           - container
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
       - uses: bonddim/action-lxd-init@stable
       - name: Install dependencies
-        run: sudo python3 -m pip install --no-cache-dir --requirement .github/workflows/requirements.txt
+        run: python3 -m pip install --no-cache-dir --requirement .github/workflows/requirements.txt '${{ matrix.ansible }}'
       - run: molecule test
         env:
           INSTALL_METHOD: ${{ matrix.install_method }}
