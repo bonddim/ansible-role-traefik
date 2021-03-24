@@ -2,7 +2,7 @@
 # tasks file for traefik role
 - name: Check required variables
   import_tasks: assert.yml
-  tags: traefik, assert
+  tags: traefik, assert, always
 
 - name: Run pre-installation tasks
   import_tasks: preinstall.yml
