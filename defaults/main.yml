@@ -21,6 +21,7 @@ traefik_basic_auth_pass: $apr1$MR6nE9XC$lC2fnUmGLmsZDGqNlcdxU0  # 'admin' - gene
 # Logs
 traefik_log_level: ERROR
 traefik_log_format: json
+traefik_log_filepath: ""
 
 # HTTPS
 traefik_enable_https: false
