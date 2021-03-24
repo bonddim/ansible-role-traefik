@@ -2,12 +2,12 @@
 # defaults file for traefik role
 # Common vars
 traefik_version: latest
-traefik_install_method: binary  ## possible values: binary, container
+traefik_install_method: binary  ## possible values: binary, docker
 
 traefik_host_domainname: ""
 traefik_env: {}
 
-# Container related vars
+# Docker related vars
 traefik_docker_network: bridge
 
 # Dashboard

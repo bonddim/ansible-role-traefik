@@ -24,7 +24,7 @@ jobs:
           - 'ansible>=2.10'
         install_method:
           - binary
-          - container
+          - docker
 
     steps:
       - uses: actions/checkout@v2
