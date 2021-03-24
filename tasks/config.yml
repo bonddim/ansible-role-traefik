@@ -1,22 +1,31 @@
 ---
-- name: Generate static config file
+- name: Generate static config
   template:
     dest: "{{ traefik_configfile_static }}"
-    src: static.yaml.j2
+    src: traefik.yaml.j2
     lstrip_blocks: true
     trim_blocks: true
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
     mode: 0640
-  register: _traefik_restart
+  register: _traefik_config
   notify: traefik_restart
 
-- name: Generate dynamic config file
+- name: Generate dynamic config (default)
   template:
-    dest: "{{ traefik_configfile_dynamic }}"
-    src: dynamic.yaml.j2
+    dest: "{{ traefik_configdir_dynamic }}/default.yaml"
+    src: default.yaml.j2
     lstrip_blocks: true
     trim_blocks: true
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
     mode: 0640
+
+- name: Generate dynamic config (custom)
+  copy:
+    dest: "{{ traefik_configdir_dynamic }}/custom.yaml"
+    content: "{{ traefik_custom_config | to_yaml(indent=2,width=180) }}"
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+    mode: 0640
+  when: traefik_custom_config | length > 0

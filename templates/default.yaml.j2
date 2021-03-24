@@ -4,34 +4,13 @@ http:
   routers:
   {% if traefik_dashboard_enable %}
     traefik:
-      entrypoints: [ {{ traefik_enable_https | ternary('websecure', 'web') }} ]
+      entrypoints: [{{ traefik_enable_https | ternary('websecure', 'web') }}]
       rule: {% if traefik_host_domainname %}"Host(`traefik.{{ traefik_host_domainname }}`)"
             {% else %}"PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
             {% endif %}
       service: api@internal
       middlewares: {{ traefik_dashboard_middlewares }}
   {% endif %}
-  {% for item in traefik_http_routes %}
-    {{ item.name }}:
-      entrypoints: [ {{ traefik_enable_https | ternary('websecure', 'web') }} ]
-      rule: {% if item.rule | default(false) %}"{{ item.rule }}"
-            {% elif traefik_host_domainname %}"Host(`{{ item.name }}.{{ traefik_host_domainname }}`)"
-            {% else %}"Host(`{{ item.name }}`)"
-            {% endif %}
-      service: {{ item.service | default(item.name) }}
-      middlewares: {{ item.middlewares | default('') }}
-      priority: {{ item.priority | default('0') }}
-  {% endfor %}
-
-  services:
-  {% for item in traefik_http_routes %}
-    {{ item.name }}:
-      loadBalancer:
-        servers:
-          {% for url in item.url | default([]) %}
-          - url: "{{ url }}"
-          {% endfor %}
-  {% endfor %}
 
   middlewares:
     default-security:
@@ -39,19 +18,15 @@ http:
         middlewares:
           - rate-limit
           - secure-headers
-
     auth-basic:
       basicAuth:
-        removeHeader: true
         headerField: X-WebAuth-User
         users:
           - "{{ traefik_basic_auth_user }}:{{ traefik_basic_auth_pass }}"
-
     rate-limit:
       rateLimit:
         average: 100
         burst: 50
-
     secure-headers:
       headers:
         accessControlAllowMethods:
@@ -78,27 +53,9 @@ http:
           X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex,"
           server: ""
 
-    {% for item in traefik_http_middlewares %}
-    {{ item.name }}:
-      {{ item.type }}:
-        {% for key, value in item.options.items() %}
-        {{ key }}: {{ value }}
-        {% endfor %}
-    {% endfor %}
-
-
 tls:
-  {% if traefik_tls_resolver == 'user' %}
-  certificates:
-    {% for item in traefik_tls_certificates %}
-    - certFile: {{ item.cert }}
-      keyFile: {{ item.key }}
-    {% endfor %}
-  {% endif %}
   options:
-    modern:
-      minVersion: VersionTLS13
-    intermediate:
+    default:
       minVersion: VersionTLS12
       cipherSuites:
         - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384

@@ -7,12 +7,7 @@
     group: root
     mode: 0644
   register: _traefik_service_file
-
-- name: Ensure traefik.service is enabled
-  systemd:
-    name: traefik.service
-    enabled: true
-    daemon_reload: "{{ _traefik_service_file.changed }}"
+  notify: traefik_restart
 
 - name: Check installed version
   shell:
@@ -41,6 +36,7 @@
     _traefik_version: "{{ (traefik_version == 'latest') | ternary(_traefik_release, traefik_version) }}"
 
 - when: _traefik_version | regex_replace('^v') is version(_traefik_installed.stdout | default('0', true), '!=' )
+  # run when the required traefik version and the installed one are different
   block:
     - name: Show traefik version
       debug:
@@ -55,22 +51,13 @@
         keep_newer: false
         mode: 0640
 
-    - name: Stop service before update
-      systemd:
-        name: traefik.service
-        state: stopped
-
     - name: Copy binary to install location
       copy:
-        dest: "{{ traefik_install_path }}"
+        dest: "{{ traefik_bin_path }}"
         src: /tmp/traefik
         remote_src: true
         force: true
         owner: root
         group: root
         mode: 0755
-  always:
-    - name: Ensure traefik.service is started
-      systemd:
-        name: traefik.service
-        state: started
+      notify: traefik_restart

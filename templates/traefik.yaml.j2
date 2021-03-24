@@ -15,8 +15,7 @@ entryPoints:
     address: :443
     http:
       tls:
-        options: {{ traefik_tls_config }}@file
-        {% if traefik_tls_resolver == 'acme' %}
+        {% if traefik_acme_enable | bool %}
         certResolver: letsEncrypt
         domains: {{ traefik_acme_domains }}
         {% endif %}
@@ -64,7 +63,7 @@ providers:
 
   # File configuration backend
   file:
-    filename: {{ traefik_configfile_dynamic }}
+    directory: {{ traefik_configdir_dynamic }}
     watch: true
 
 # API and dashboard configuration
@@ -76,3 +75,4 @@ api:
 log:
   level: {{ traefik_log_level }}
   format: {{ traefik_log_format }}
+  filePath: {{ traefik_log_filepath }}

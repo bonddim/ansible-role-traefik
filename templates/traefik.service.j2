@@ -6,7 +6,7 @@
 Description=Traefik
 Documentation=https://doc.traefik.io/traefik/
 After=network-online.target docker.service
-AssertFileIsExecutable={{ traefik_install_path }}
+AssertFileIsExecutable={{ traefik_bin_path }}
 AssertPathExists={{ traefik_configfile_static }}
 
 [Service]
@@ -19,7 +19,7 @@ Environment="{{ key }}={{ value }}"
 
 # configure service behavior
 Type=notify
-ExecStart={{ traefik_install_path }} --configFile={{ traefik_configfile_static }}
+ExecStart={{ traefik_bin_path }} --configFile={{ traefik_configfile_static }}
 Restart=always
 WatchdogSec=1s
 

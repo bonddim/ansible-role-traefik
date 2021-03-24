@@ -4,40 +4,35 @@ name: Molecule
 on:
   push:
     branches:
-      - '*'
-    paths-ignore:
-      - '**.md'
+      - '**'
+  pull_request:
   schedule:
     - cron: '0 0 * * 0'
 
 jobs:
   molecule:
+    # skip job on pull requests from base repository
+    if: github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: bonddim.traefik
     strategy:
+      fail-fast: false
       matrix:
+        ansible:
+          - 'ansible<2.10'
+          - 'ansible>=2.10'
         install_method:
           - binary
-          - container
+          - docker
 
     steps:
-      - name: Checks-out repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
-          path: bonddim.traefik
-
-      - name: LXD init
-        uses: bonddim/action-lxd@v1
-
+          python-version: '3.x'
+      - uses: bonddim/action-lxd-init@stable
       - name: Install dependencies
-        run: |
-          sudo python3 -m pip install 'ansible-lint==5.0.1' yamllint molecule-lxd
-          ansible-galaxy role install bonddim.docker
-
-      - name: Run Molecule tests
-        run: molecule test
+        run: python3 -m pip install --no-cache-dir --requirement .github/workflows/requirements.txt '${{ matrix.ansible }}'
+      - run: molecule test
         env:
           INSTALL_METHOD: ${{ matrix.install_method }}
           PY_COLORS: '1'

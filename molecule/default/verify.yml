@@ -18,7 +18,7 @@
       retries: 3
       delay: 5
 
-    - when: lookup('env', 'INSTALL_METHOD') == 'container'
+    - when: lookup('env', 'INSTALL_METHOD') == 'docker'
       block:
         - name: Start whoami container
           docker_container:
