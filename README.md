@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This role is no longer supported, please consider using [bonddim.linux](https://galaxy.ansible.com/bonddim/linux) collection instead
+
 # Ansible Role: traefik
 
 [![Ansible Role](https://img.shields.io/ansible/role/51648?label=galaxy&logo=ansible)](https://galaxy.ansible.com/bonddim/traefik)
